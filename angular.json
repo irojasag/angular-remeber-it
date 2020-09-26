@@ -1,8 +1,131 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "remember-client": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/remember-client",
+      "sourceRoot": "apps/remember-client/src",
+      "prefix": "remember-it",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/remember-client",
+            "index": "apps/remember-client/src/index.html",
+            "main": "apps/remember-client/src/main.ts",
+            "polyfills": "apps/remember-client/src/polyfills.ts",
+            "tsConfig": "apps/remember-client/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/remember-client/src/favicon.ico",
+              "apps/remember-client/src/assets"
+            ],
+            "styles": ["apps/remember-client/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/remember-client/src/environments/environment.ts",
+                  "with": "apps/remember-client/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "remember-client:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "remember-client:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "remember-client:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/remember-client/tsconfig.app.json",
+              "apps/remember-client/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/remember-client/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/remember-client/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "remember-client-e2e": {
+      "root": "apps/remember-client-e2e",
+      "sourceRoot": "apps/remember-client-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/remember-client-e2e/cypress.json",
+            "tsConfig": "apps/remember-client-e2e/tsconfig.e2e.json",
+            "devServerTarget": "remember-client:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "remember-client:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/remember-client-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/remember-client-e2e/**/*"]
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/angular",
+    "analytics": "a1dcef9b-50a9-480b-9e26-510c938f9f86"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -38,6 +161,14 @@
       "library": {
         "linter": "tslint"
       }
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
-  }
+  },
+  "defaultProject": "remember-client"
 }
